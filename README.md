@@ -4,7 +4,7 @@ CLI Chat Program Based on RabbitMQ
 ## Requirements
  - JRE >= 1.7
  - [Maven](https://maven.apache.org/download.cgi) installed
- - [RabbitMQ 3.5.6 server](http://www.rabbitmq.com/download.html) installed
+ - [RabbitMQ 3.5.6 server](http://www.rabbitmq.com/download.html) installed on localhost
 
 
 ## How to Build
@@ -32,7 +32,7 @@ CLI Chat Program Based on RabbitMQ
 	 ```
 
 ## Chat Commands
-- `nick <nickname>` : login as `nickname`. Leave nickname empty to login as random user
+- `nick <nickname>` : login as `nickname`. Leave `nickname` empty to login as a random user
 - `join <channelname>` : join to a channel named `channelname`
 - `leave <channelname>` : leave a channel named `channelname`
 - `@<channelname> <message>` :  send `message` to a channel named `channelname`
@@ -41,6 +41,13 @@ CLI Chat Program Based on RabbitMQ
 - `exit` : stop program
 
 ## Testing
+Conducted Testing:
+* All commands (nick, join, leave, etc)
+* Send a message to a channel that is not a member of
+* Join a channel that already a member of
+* Leave a channel that is not a member of
+* Multiclient chat
+
 ![alt text](https://github.com/edmundophie/rabbiymq-chat/blob/master/blob/coming_soon.png "Screenshot tes 1")
 
 ## Team Member
