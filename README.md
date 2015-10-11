@@ -31,6 +31,15 @@ CLI Chat Program Based on RabbitMQ
 	 $ java -cp target/dependency/*:target/rabbitmq-chat-1.0.jar com.edmundophie.chat.RpcClient
 	 ```
 
+## Chat Commands
+- `nick <nickname>` : login as `nickname`. Leave nickname empty to login as random user
+- `join <channelname>` : join to a channel named `channelname`
+- `leave <channelname>` : leave a channel named `channelname`
+- `@<channelname> <message>` :  send `message` to a channel named `channelname`
+- `<message>` : send a message to all user joined channel
+- `logout` : logout from current `nickname`
+- `exit` : stop program
+
 ## Testing
 ![alt text](https://github.com/edmundophie/rabbiymq-chat/blob/master/blob/coming_soon.png "Screenshot tes 1")
 
