@@ -20,12 +20,13 @@ CLI Chat Program Based on RabbitMQ
 	 ```
 
 ## How to Run	 
-1. Run `RpcServer` from the generated `jar` in `target` folder  
+1. Start rabbitmq broker
+2. Run `RpcServer` from the generated `jar` in `target` folder  
 
 	 ```
 	 $ java -cp target/dependency/*:target/rabbitmq-chat-1.0.jar com.edmundophie.chat.RpcServer
 	 ```
-2. Run `RpcClient` from the generated `jar` in `target` folder  
+3. Run `RpcClient` from the generated `jar` in `target` folder  
 
 	 ```
 	 $ java -cp target/dependency/*:target/rabbitmq-chat-1.0.jar com.edmundophie.chat.RpcClient
