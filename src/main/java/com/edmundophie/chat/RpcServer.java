@@ -51,7 +51,7 @@ public class RpcServer {
             messageListMap = new HashMap<String, List<Message>>();
             channelMemberMap= new HashMap<String, List<String>>();
 
-            System.out.println(" - RPC server started");
+            System.out.println("- RPC server started");
 
             while (true) {
                 String response = null;
@@ -110,7 +110,7 @@ public class RpcServer {
     }
 
     private static String login(String nickname) {
-        System.out.println(" - Login method invoked");
+        System.out.println("- Login method invoked");
         StringBuilder message = new StringBuilder();
 
         if(nickname==null || nickname.isEmpty() || userMap.containsKey(nickname)) {
@@ -137,7 +137,7 @@ public class RpcServer {
     }
 
     public static String join(String nickname, String channelName) {
-        System.out.println(" - " + nickname + " requested to join #" + channelName);
+        System.out.println("- " + nickname + " requested to join #" + channelName);
 
         List userChannelList = userMap.get(nickname).getJoinedChannel();
         StringBuilder message = new StringBuilder();
@@ -186,7 +186,7 @@ public class RpcServer {
     }
 
     public static String logout(String nickname) {
-        System.out.println(" - " + nickname + " requested to logout");
+        System.out.println("- " + nickname + " requested to logout");
         userMap.remove(nickname);
 
         Response response = new Response();
@@ -258,7 +258,8 @@ public class RpcServer {
         for(String channelName:userChannelList) {
             String enrichedMessage = "@" + channelName + " " + message.getSender() + ": " + message.getText();
             for(String routingKey:channelMemberMap.get(channelName)) {
-                messageOutChannel.basicPublish(MESSAGE_EXCHANGE_NAME, routingKey, null, enrichedMessage.getBytes());
+                if(userMap.containsKey(routingKey))
+                    messageOutChannel.basicPublish(MESSAGE_EXCHANGE_NAME, routingKey, null, enrichedMessage.getBytes());
             }
         }
     }
@@ -266,7 +267,8 @@ public class RpcServer {
     public static void distributeMessage(Message message, String channelName) throws IOException {
         String enrichedMessage = "@" + channelName + " " + message.getSender()+ ": " + message.getText();
         for(String routingKey:channelMemberMap.get(channelName)) {
-            messageOutChannel.basicPublish(MESSAGE_EXCHANGE_NAME, routingKey, null, enrichedMessage.getBytes());
+            if(userMap.containsKey(routingKey))
+                messageOutChannel.basicPublish(MESSAGE_EXCHANGE_NAME, routingKey, null, enrichedMessage.getBytes());
         }
     }
 }
