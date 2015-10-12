@@ -43,10 +43,14 @@ CLI Chat Program Based on RabbitMQ
 
 ## Testing
 Conducted Testing:
-* All commands (nick, join, leave, etc)
+* All basic commands (nick, join, leave, etc)
+* Invalid command (e.g. `@<channelname>` without message)
+* Send a message when no channel is joined
 * Send a message to a channel that is not a member of
 * Join a channel that already a member of
 * Leave a channel that is not a member of
+* Logout and relogin with the same nickname
+* Login with existed nickname
 * Multiclient chat
 
 ![alt text](https://github.com/edmundophie/rabbitmq-chat/blob/master/testing-screenshot/testing1.png "Testin Screenshot 1")
