@@ -23,6 +23,7 @@ public class RpcServer {
     private static Map<String, Channel> channelMap;
     private static Map<String, List<Message>> messageListMap; // TODO HIGH change to publish subscribe
     private static com.rabbitmq.client.Channel messageOutChannel;
+    private static Map<String, List<String>> channelMemberMap;
 
     public static void main (String[] args) {
         Connection connection = null;
@@ -48,6 +49,7 @@ public class RpcServer {
             userMap =  new HashMap<String, User>();
             channelMap =  new HashMap<String, Channel>();
             messageListMap = new HashMap<String, List<Message>>();
+            channelMemberMap= new HashMap<String, List<String>>();
 
             System.out.println(" - RPC server started");
 
@@ -148,10 +150,12 @@ public class RpcServer {
             if(!channelMap.containsKey(channelName)) {
                 channelMap.put(channelName, new Channel(channelName));
                 messageListMap.put(channelName, new ArrayList<Message>());
+                channelMemberMap.put(channelName, new ArrayList<String>());
                 message.append("* Created new channel #" + channelName + "\n");
             }
 
             userChannelList.add(channelName);
+            channelMemberMap.get(channelName).add(nickname);
             message.append("* #" + channelName + " joined successfully");
             response.putStatus(true);
         }
@@ -172,6 +176,7 @@ public class RpcServer {
             response.putStatus(false);
         } else {
             userMap.get(nickname).getJoinedChannel().remove(channelName);
+            channelMemberMap.get(channelName).remove(nickname);
             response.putStatus(true);
             message.append("* You are no longer a member of #" + channelName);
         }
@@ -206,9 +211,6 @@ public class RpcServer {
             returnedMessage.append("* You are not a member of #" + channelName);
             response.putStatus(false);
         } else {
-//            channelMap.get(channelName).getMessages().add(msg); // TODO LOW is channelMap really needed?
-//            msg.setText("@" + channelName + " " + nickname + ": " + msg.getText());
-//            messageListMap.get(channelName).add(msg);
             try {
                 Message msg = new Message(nickname, message);
                 distributeMessage(msg, channelName);
@@ -236,11 +238,6 @@ public class RpcServer {
             returnedMessage.append("* Failed to send the message\n* You haven't join any channel yet");
             response.putStatus(false);
         } else {
-//            for(String channelName:userChannelList) { // TODO LOW async
-//                channelMap.get(channelName).getMessages().add(msg);
-//                Message temp = new Message(nickname, "@" + channelName + " " + nickname + ": " + msg.getText());
-//                messageListMap.get(channelName).add(temp);
-//            }
             try {
                 Message msg = new Message(nickname, message);
                 distributeMessage(msg, userChannelList);
@@ -259,13 +256,19 @@ public class RpcServer {
 
     public static void distributeMessage(Message message, List<String> userChannelList) throws IOException {
         for(String channelName:userChannelList) {
-           String enrichedMessage = "@" + channelName + " " + message.getSender()+ ": " + message.getText();
-            messageOutChannel.basicPublish(MESSAGE_EXCHANGE_NAME, channelName, null, enrichedMessage.getBytes());
+            String enrichedMessage = "@" + channelName + " " + message.getSender() + ": " + message.getText();
+            for(String routingKey:channelMemberMap.get(channelName)) {
+                System.out.println(" - Routing to :" + channelName + ", " + routingKey);
+                messageOutChannel.basicPublish(MESSAGE_EXCHANGE_NAME, routingKey, null, enrichedMessage.getBytes());
+            }
         }
     }
 
     public static void distributeMessage(Message message, String channelName) throws IOException {
         String enrichedMessage = "@" + channelName + " " + message.getSender()+ ": " + message.getText();
-        messageOutChannel.basicPublish(MESSAGE_EXCHANGE_NAME, channelName, null, enrichedMessage.getBytes());
+        for(String routingKey:channelMemberMap.get(channelName)) {
+            System.out.println(" - Routing to :" + routingKey);
+            messageOutChannel.basicPublish(MESSAGE_EXCHANGE_NAME, routingKey, null, enrichedMessage.getBytes());
+        }
     }
 }

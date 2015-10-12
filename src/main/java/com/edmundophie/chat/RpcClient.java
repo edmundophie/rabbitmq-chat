@@ -7,6 +7,8 @@ import com.rabbitmq.client.Channel;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -165,23 +167,6 @@ public class RpcClient {
                 nickname = response.getNickname();
                 isLoggedIn = true;
                 System.out.println(response.getMessage());
-
-//                Runnable messageListener = new Runnable() {
-//                    public void run() {
-//                        System.out.println("* Message listener started...");
-//                        while (isLoggedIn) {
-//                            List<FetchMessagesResponse.Message> messages = getMessages();
-//                            if (messages != null && !messages.isEmpty()) {
-//                                lastReceivedMessageTimestamp = messages.get(messages.size() - 1).getTimestamp();
-//                                for(FetchMessagesResponse.Message msg:messages)
-//                                    System.out.println(msg.getText());
-//                            }
-//                        }
-//                    }
-//                };
-//
-//                messageListenerThread = new Thread(messageListener);
-//                messageListenerThread.start();
             } else {
                 System.err.println(response.getMessage());
             }
@@ -201,9 +186,9 @@ public class RpcClient {
             Response response = mapper.readValue(responseJson, Response.class);
 
             if(response.isStatus()) {
-                messageInChannel.queueDeclare(parameter, false, false, true, null); //channel.queueDeclare().getQueue();
-                messageInChannel.queueBind(parameter, MESSAGE_EXCHANGE_NAME, parameter);
-                messageInChannel.basicConsume(parameter, true, messageInConsumer);
+                messageInChannel.queueDeclare(nickname, false, false, true, null);
+                messageInChannel.queueBind(nickname, MESSAGE_EXCHANGE_NAME, nickname);
+                messageInChannel.basicConsume(nickname, true, messageInConsumer);
                 System.out.println(response.getMessage());
             } else
                 System.err.println(response.getMessage());
@@ -223,8 +208,6 @@ public class RpcClient {
             Response response = mapper.readValue(responseJson, Response.class);
 
             if(response.isStatus()) {
-                messageInChannel.queueUnbind(parameter, MESSAGE_EXCHANGE_NAME, parameter);
-//                messageInChannel.queueDelete(parameter);
                 System.out.println(response.getMessage());
             } else
                 System.err.println(response.getMessage());
