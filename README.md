@@ -42,7 +42,7 @@ CLI Chat Program Based on RabbitMQ
 - `exit` : stop program
 
 ## Testing
-Conducted Testing:
+#### Conducted Testing:
 * All basic commands (nick, join, leave, etc)
 * Invalid command (e.g. `@<channelname>` without message)
 * Send a message when no channel is joined
@@ -53,6 +53,7 @@ Conducted Testing:
 * Login with existed nickname
 * Multiclient chat
 
+#### Testing Screenshoot:
 ![alt text](https://github.com/edmundophie/rabbitmq-chat/blob/master/testing-screenshot/testing1.png "Testin Screenshot 1")
 
 ## Team Member
