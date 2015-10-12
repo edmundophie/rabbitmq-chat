@@ -49,7 +49,7 @@ Conducted Testing:
 * Leave a channel that is not a member of
 * Multiclient chat
 
-![alt text](https://github.com/edmundophie/rabbiymq-chat/blob/master/blob/coming_soon.png "Screenshot tes 1")
+![alt text](https://github.com/edmundophie/rabbitmq-chat/blob/master/testing-screenshot/testing1.png "Testin Screenshot 1")
 
 ## Team Member
 - Edmund Ophie 13512095
