@@ -225,6 +225,8 @@ public class RpcClient {
             Response response = mapper.readValue(responseJson, Response.class);
 
             if(response.isStatus()) {
+                messageInChannel.queueUnbind(nickname, MESSAGE_EXCHANGE_NAME, nickname);
+                messageInChannel.queueDelete(nickname);
                 isLoggedIn = false;
                 nickname = "";
                 System.out.println(response.getMessage());
