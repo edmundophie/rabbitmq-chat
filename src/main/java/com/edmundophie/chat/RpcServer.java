@@ -258,7 +258,6 @@ public class RpcServer {
         for(String channelName:userChannelList) {
             String enrichedMessage = "@" + channelName + " " + message.getSender() + ": " + message.getText();
             for(String routingKey:channelMemberMap.get(channelName)) {
-                System.out.println(" - Routing to :" + channelName + ", " + routingKey);
                 messageOutChannel.basicPublish(MESSAGE_EXCHANGE_NAME, routingKey, null, enrichedMessage.getBytes());
             }
         }
@@ -267,7 +266,6 @@ public class RpcServer {
     public static void distributeMessage(Message message, String channelName) throws IOException {
         String enrichedMessage = "@" + channelName + " " + message.getSender()+ ": " + message.getText();
         for(String routingKey:channelMemberMap.get(channelName)) {
-            System.out.println(" - Routing to :" + routingKey);
             messageOutChannel.basicPublish(MESSAGE_EXCHANGE_NAME, routingKey, null, enrichedMessage.getBytes());
         }
     }
